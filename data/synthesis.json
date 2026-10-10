@@ -1,0 +1,6 @@
+[
+  {"id": "s_water_blade", "inputs": ["water_jet", "pressure_control"], "output": "water_blade", "desc": "Comprimir o jato até o limite cria um fio cortante."},
+  {"id": "s_purification", "inputs": ["resist_poison", "regenerate"], "output": "purification", "desc": "Corpo que expulsa toxinas e se regenera ao mesmo tempo."},
+  {"id": "s_adv_detect", "inputs": ["magic_perception", "keen_senses"], "output": "advanced_detection", "desc": "Percepção refinada até a leitura instantânea."},
+  {"id": "s_venom_web", "inputs": ["sticky_thread", "poison_breath"], "output": "venomous_web", "desc": "Teia impregnada com o próprio veneno."}
+]

@@ -1,0 +1,20 @@
+{
+  "rat_fang": {"id": "rat_fang", "name": "Presa de Rato", "type": "material", "desc": "Presa afiada. Pode ser vendida ou forjada."},
+  "bat_wing": {"id": "bat_wing", "name": "Asa de Morcego", "type": "material", "desc": "Membrana leve usada em poções."},
+  "toad_oil": {"id": "toad_oil", "name": "Óleo de Sapo", "type": "material", "desc": "Muco destilado, base de antídotos."},
+  "lizard_scale": {"id": "lizard_scale", "name": "Escama de Lagarto", "type": "material", "desc": "Impermeável e resistente."},
+  "goblin_cloth": {"id": "goblin_cloth", "name": "Tecido Goblin", "type": "material", "desc": "Grosseiro, mas útil para comércio."},
+  "wolf_fang": {"id": "wolf_fang", "name": "Presa de Lobo", "type": "material", "desc": "Marcador de caça vitorioso."},
+  "wolf_pelt": {"id": "wolf_pelt", "name": "Pele de Lobo", "type": "material", "desc": "Pelego quente para o inverno."},
+  "steel_shard": {"id": "steel_shard", "name": "Fragmento de Aço", "type": "material", "desc": "Metal trabalhado, raro no início."},
+  "magic_liquid": {"id": "magic_liquid", "name": "Líquido Mágico", "type": "material", "desc": "Essência mágica condensada."},
+  "thick_hide": {"id": "thick_hide", "name": "Couro Grosso", "type": "material", "desc": "Couro de ogro, dificílimo de cortar."},
+  "royal_fang": {"id": "royal_fang", "name": "Presa Real", "type": "material", "desc": "Prova da derrota do Rei Lobo Borboleta."},
+  "kings_core": {"id": "kings_core", "name": "Núcleo do Rei", "type": "material", "desc": "Prova da derrota do Rei Ogro Gido."},
+  "potion_s": {"id": "potion_s", "name": "Poção Menor", "type": "consumable", "effect": {"hp": 35}, "desc": "Restaura 35 PV."},
+  "potion_l": {"id": "potion_l", "name": "Poção Maior", "type": "consumable", "effect": {"hp": 90}, "desc": "Restaura 90 PV."},
+  "ether_s": {"id": "ether_s", "name": "Éter Menor", "type": "consumable", "effect": {"mp": 25}, "desc": "Restaura 25 PM."},
+  "antidote": {"id": "antidote", "name": "Antídoto", "type": "consumable", "effect": {"cure": "poison"}, "desc": "Cura envenenamento."},
+  "smoke_ball": {"id": "smoke_ball", "name": "Bomba de Fumaça", "type": "consumable", "effect": {"escape": true}, "desc": "Fuga garantida de batalhas comuns."},
+  "rice_cracker": {"id": "rice_cracker", "name": "Biscoito de Arroz", "type": "consumable", "effect": {"hp": 20, "mp": 5}, "desc": "Feito pelos cozinheiros de Tempest. 20 PV e 5 PM."}
+}

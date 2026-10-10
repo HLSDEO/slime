@@ -1,0 +1,16 @@
+{
+  "pools": {
+    "cave": {"rate": 0.10, "groups": [["giant_rat"], ["cave_bat"], ["giant_rat", "giant_rat"]]},
+    "forest": {"rate": 0.09, "groups": [["forest_frog"], ["lizard_man"], ["forest_wolf"], ["goblin_scout"], ["giant_rat", "forest_frog"], ["forest_wolf", "forest_wolf"]]},
+    "road": {"rate": 0.08, "groups": [["bandit"], ["bandit", "bandit"], ["ogre_grunt"]]},
+    "swamp": {"rate": 0.10, "groups": [["forest_frog"], ["forest_frog", "forest_frog"], ["lizard_man", "forest_frog"]]}
+  },
+  "fixed": {
+    "rats_goblins": ["giant_rat", "giant_rat"],
+    "wolf_pack": ["forest_wolf", "forest_wolf", "forest_wolf"],
+    "boss_lobo": ["butterfly_wolf_king"],
+    "swamp_miniboss": ["elite_frog"],
+    "raiders": ["dwarf_raider", "dwarf_raider"],
+    "boss_gido": ["ogre_king_gido", "ogre_grunt"]
+  }
+}

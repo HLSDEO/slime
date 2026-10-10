@@ -1,0 +1,248 @@
+{
+  "prologue_wake": {
+    "lines": [
+      ["", "Satoshi Mikami era um funcionário comum. Um dia, um assalto... e tudo acabou."],
+      ["", "Então, em algum lugar, uma voz: \"Você tem um pedido a fazer?\""],
+      ["Rimuru?", "...Eu? Um slime? Pelo menos estou vivo."],
+      ["Grande Sábio", "Aviso: você adquiriu a habilidade única [Predador]."],
+      ["Grande Sábio", "Aviso: você adquiriu a habilidade única [Grande Sábio]."],
+      ["Rimuru", "Ótimo. Grande Sábio, qual o plano? — Ah. Tem algo enorme se mexendo naquela parede..."]
+    ],
+    "actions": [{"skill": "predator"}, {"skill": "great_sage"}, {"skill": "water_jet"}, {"quest": "q_intro", "state": "start"}]
+  },
+  "veldora_meet": {
+    "lines": [
+      ["Veldora", "QUEM OUSA ME PERTURBAR?! Eu sou Veldora, o Dragão da Tempestade!"],
+      ["Rimuru", "Prazer. Slime. Morava aqui, acho."],
+      ["Veldora", "Você... não tem medo? Ninguém nunca entra aqui. Fica comigo! Brinca comigo!"],
+      ["Rimuru", "Se você prometer não me esmagar, podemos ser amigos."],
+      ["Veldora", "AMIGOS! Sim! Vou te dar meu poder emprestado quando precisar. Agora vai lá fora, ver o mundo!"],
+      ["Grande Sábio", "Dica: [E] interage. [Shift] corre. [Q] abre o menu do Grande Sábio (melhorias e bestiário)."]
+    ],
+    "actions": [{"set": "met_veldora", "val": true}]
+  },
+  "cave_exit_hint": {
+    "lines": [["Grande Sábio", "A saída fica ao sul. A floresta é perigosa — mas devorar presas fracas concede habilidades. Use [Analisar] primeiro."]]
+  },
+  "goblin_survivor": {
+    "lines": [
+      ["Goblin", "Por favor... não me coma... A tribo... o monstro de asas nos massacrou..."],
+      ["Rimuru", "Calma. Eu não vou te machucar. Que monstro?"],
+      ["Goblin", "O... o Rei Lobo Borboleta! Ele domina a floresta! Nós éramos fracos demais..."],
+      ["Rimuru", "Escuta: eu cuido do lobo. Em troca, seu povo vem morar comigo. Um lugar seguro, comida, tudo."],
+      ["Goblin", "V-você faria isso?! Eu... eu sirvo você, senhor!"],
+      ["Grande Sábio", "Sugestão: o covil do Rei Lobo fica ao norte da floresta. Analise os lobos antes."]
+    ],
+    "actions": [{"quest": "q_goblins", "state": "complete"}, {"set": "goblin_saved", "val": true}, {"quest": "q_boss_lobo", "state": "start"}, {"recruit": "rigurumu"}, {"item": "potion_s", "qty": 2}],
+    "goto": "riguru_join"
+  },
+  "riguru_join": {
+    "lines": [
+      ["Rimuru", "Seu nome era só 'goblin', né? Agora você tem nome: Rigurimu."],
+      ["Rigurimu", "Rigurimu... um nome! Obrigado, senhor Rimuru! Vou lutar ao seu lado!"],
+      ["Grande Sábio", "Aliado [Rigurimu] registrado. Aliados lutam ao seu lado em batalhas."],
+      ["Rigurimu", "Os lobos odeiam invasores, senhor. Se encontrar a matilha, podemos TENTAR conversar... eu conheço os ritos deles."]
+    ],
+    "actions": [{"quest": "q_wolves", "state": "start"}]
+  },
+  "wolf_event": {
+    "lines": [
+      ["Lobo Alfa", "GRRRR... carne estranha na nossa floresta. Saia. Agora."]
+    ],
+    "choices": [
+      {"text": "Lutar", "goto": "wolf_fight", "actions": [{"battle": "wolf_pack", "goto": "wolf_after_fight"}]},
+      {"text": "Negociar (Rigurimu conhece os ritos)", "goto": "wolf_peace", "requires": {"ally": "rigurumu"}},
+      {"text": "Demonstrar poder (Rei já derrotado)", "goto": "wolf_power", "requires": {"flag": "boss_lobo_done"}}
+    ]
+  },
+  "wolf_fight": {"lines": [["Lobo Alfa", "ENTÃO MORRA!"]]},
+  "wolf_after_fight": {
+    "lines": [
+      ["Lobo Alfa", "Aagh... você é forte... a floresta é sua, então. Faça o que quiser."],
+      ["Grande Sábio", "Matilha dispersada. Sem aliança — os lobos agora evitam a área."]
+    ],
+    "actions": [{"set": "wolves_hostile", "val": true}, {"quest": "q_wolves", "state": "complete"}]
+  },
+  "wolf_peace": {
+    "lines": [
+      ["Rigurimu", "Grande Alfa... nosso novo senhor protegeu os fracos. Ele honra a caça. Aceite nossa dança da lua!"],
+      ["Lobo Alfa", "...Um goblin com nome. E um slime que cheira a dragão. Tudo bem. A matilha caça com você."],
+      ["Rimuru", "Isso significa que somos aliados? — Sim! Uhu! Lobos montáveis!"],
+      ["Grande Sábio", "Aliança firmada: [Lobos da Floresta]. Desbloqueado: patrulhas de montaria em Tempest."]
+    ],
+    "actions": [{"set": "wolves_ally", "val": true}, {"quest": "q_wolves", "state": "complete"}, {"recruit": "veldora_wolf"}, {"item": "wolf_pelt", "qty": 1}]
+  },
+  "wolf_power": {
+    "lines": [
+      ["Rimuru", "Ajoelhe-se e verá quem caça quem."],
+      ["Lobo Alfa", "...O cheiro do rei morto está em você. A matilha se curva."],
+      ["Grande Sábio", "Aliança por respeito firmada: [Lobos da Floresta]."]
+    ],
+    "actions": [{"set": "wolves_ally", "val": true}, {"quest": "q_wolves", "state": "complete"}, {"recruit": "veldora_wolf"}]
+  },
+  "boss_gate": {
+    "lines": [
+      ["Grande Sábio", "Alerta: borboletas tóxicas marcam o território do [Rei Lobo Borboleta]."],
+      ["Grande Sábio", "Recomendação: PV acima de 80, cura equipada e ao menos 1 aliado. Chefes não podem ser devorados."]
+    ],
+    "choices": [
+      {"text": "Enfrentar agora", "goto": "boss_fight", "actions": [{"battle": "boss_lobo", "goto": "boss_win"}]},
+      {"text": "Voltar depois", "goto": null}
+    ]
+  },
+  "boss_fight": {"lines": [["Rei Lobo Borboleta", "UUUUOOOO! Mais um para as minhas presas!"]]},
+  "boss_win": {
+    "lines": [
+      ["Rimuru", "Acabou... Foi por pouco. Rigurimu, avisa o povo: a floresta é nossa!"],
+      ["Rigurimu", "SENHOR RIMURUUU!! O rei caiu! Viva o senhor Rimuru!!"],
+      ["Grande Sábio", "Sugestão: o vale a leste é protegido pelas montanhas. Ideal para um assentamento."],
+      ["Rimuru", "Um lar para todos nós. Vamos chamá-lo de... TEMPEST!"]
+    ],
+    "actions": [{"set": "boss_lobo_done", "val": true}, {"quest": "q_boss_lobo", "state": "complete"}, {"quest": "q_founding", "state": "start"}, {"map": "tempest", "x": 14, "y": 18}, {"gold": 100}]
+  },
+  "tempest_found": {
+    "lines": [
+      ["Grande Sábio", "Assentamento [Tempest] fundado. Recursos: comida, material, população."],
+      ["Rigurimu", "O que fazemos primeiro, senhor? Um ferreiro forjaria armas, e uns cozinheiros dariam comida de verdade!"],
+      ["Rimuru", "Primeiro: a Vila Jura, ao sul, tem artesãos. Vamos contratá-los com boas trocas."]
+    ],
+    "actions": [{"set": "founding_done", "val": true}, {"quest": "q_founding", "state": "complete"}, {"quest": "q_craftsmen", "state": "start"}]
+  },
+  "npc_riguru": {
+    "lines": [
+      ["Rigurimu", "Os goblins estão erguendo casas, senhor! A população cresce a cada dia."]
+    ]
+  },
+  "npc_blacksmith": {
+    "lines": [
+      ["Ferreiro Dwarin", "Bwahaha! A forja está quente! Traga materiais e eu faço lâminas de verdade."],
+      ["Grande Sábio", "Serviço ativo: [Ferreiro]. Materiais viram equipamentos melhores (em breve na versão completa)."]
+    ]
+  },
+  "npc_cook": {
+    "lines": [
+      ["Cozinheiro Germes", "A cozinha está aberta! Com estoque de comida, produzo biscoitos de arroz para a estrada."],
+      ["Grande Sábio", "Serviço ativo: [Cozinha]. Consumível [Biscoito de Arroz] disponível para compra."]
+    ]
+  },
+  "npc_lab": {
+    "lines": [
+      ["Shun", "Irmão Rimuru! O laboratório está pronto. O Grande Sábio agora pode SINTETIZAR habilidades combinadas."],
+      ["Grande Sábio", "Síntese liberada no menu [Q] → aba Síntese."]
+    ],
+    "actions": [{"unlock_service": "lab"}]
+  },
+  "village_guide": {
+    "lines": [
+      ["Presta", "Bem-vindo à Vila Jura, merc... eh, slime. A guilda contrata aventureiros. E cuidado: ogros pilham a estrada leste."]
+    ]
+  },
+  "dwarf_artisan": {
+    "lines": [
+      ["Dwarin", "Um slime que fala?! E quer ME contratar? Sou o melhor ferreiro destas terras!"],
+      ["Dwarin", "Meu preço: 1 Fragmento de Aço e 2 Tecidos Goblin. Aço é pra forja, tecido é pra minha esposa. Fechado?"],
+      ["Grande Sábio", "Você precisa de: Fragmento de Aço x1 (bandidos/saqueadores) e Tecido Goblin x2."]
+    ],
+    "choices": [
+      {"text": "Pagar os materiais", "goto": "dwarf_yes", "requires": {"item": {"steel_shard": 1, "goblin_cloth": 2}}},
+      {"text": "Ainda não tenho os materiais", "goto": null}
+    ]
+  },
+  "dwarf_yes": {
+    "lines": [
+      ["Dwarin", "Negócio fechado! Levo minha bigorna para Tempest amanhã!"],
+      ["Grande Sábio", "Recurso [Ferreiro] contratado! Ele aparecerá em Tempest. Material +20 pela obra."]
+    ],
+    "actions": [{"consume": {"steel_shard": 1, "goblin_cloth": 2}}, {"unlock_service": "blacksmith"}, {"resource": {"material": 20}}, {"quest": "q_craftsmen", "state": "check"}]
+  },
+  "merchant_guild": {
+    "lines": [
+      ["Guilda Mercante Serei", "Comerciante... inusitado. Contrate meus cozinheiros: pague com 1 Pele de Lobo e 30 moedas."],
+      ["Grande Sábio", "Pele de Lobo: drops de [Lobo da Floresta] ou aliança com a matilha."]
+    ],
+    "choices": [
+      {"text": "Fechar contrato", "goto": "cook_yes", "requires": {"item": {"wolf_pelt": 1}, "gold": 30}},
+      {"text": "Talvez outro dia", "goto": null}
+    ]
+  },
+  "cook_yes": {
+    "lines": [
+      ["Serei", "Germes, o melhor cozinheiro do sul, vai com você. Que a comida nunca falte em sua nação!"],
+      ["Grande Sábio", "Recurso [Cozinha] contratado! Comida +15."]
+    ],
+    "actions": [{"consume": {"wolf_pelt": 1}}, {"gold": -30}, {"unlock_service": "kitchen"}, {"resource": {"food": 15}}, {"quest": "q_craftsmen", "state": "check"}]
+  },
+  "lab_request": {
+    "lines": [
+      ["Shun", "Irmão, quero pesquisar suas habilidades! Com 3 Líquidos Mágicos (drops de monstros mágicos), monto um laboratório!"]
+    ],
+    "choices": [
+      {"text": "Entregar 3 Líquidos Mágicos", "goto": "lab_done", "requires": {"item": {"magic_liquid": 3}}},
+      {"text": "Ainda não", "goto": null}
+    ]
+  },
+  "lab_done": {
+    "lines": [
+      ["Shun", "Perfeito! Laboratório de pesquisa montado no subsolo de Tempest!"],
+      ["Grande Sábio", "Síntese habilitada. Combine habilidades no menu [Q]."]
+    ],
+    "actions": [{"consume": {"magic_liquid": 3}}, {"unlock_service": "lab"}, {"quest": "q_lab", "state": "complete"}]
+  },
+  "guild_ogre_quest": {
+    "lines": [
+      ["Mestre da Guilda", "O Rei Ogro Gido uniu as tribos e pilha a estrada leste. Nossos guardas não dão conta."],
+      ["Mestre da Guilda", "Se eliminar Gido, a vila te deve — e a estrada volta a ser sua."],
+      ["Rimuru", "Uma ameaça regional... ótima maneira de mostrar que Tempest existe."]
+    ],
+    "actions": [{"quest": "q_ogre", "state": "start"}]
+  },
+  "ogre_event": {
+    "lines": [
+      ["Ogro Arauto", "Gido manda! Pague o dízimo do rei: tudo o que você tem, gosma!"]
+    ],
+    "choices": [
+      {"text": "Atacar!", "goto": "ogre_fight", "actions": [{"battle": "boss_gido", "goto": "ogre_win"}]},
+      {"text": "Negociar (aliados lobos intimidam)", "goto": "ogre_peace", "requires": {"flag": "wolves_ally"}},
+      {"text": "Demonstrar poder (prova do Rei Lobo)", "goto": "ogre_power", "requires": {"item": {"royal_fang": 1}}}
+    ]
+  },
+  "ogre_fight": {"lines": [["Rei Ogro Gido", "HAHA! UM SLIME! AMASSO!"]]},
+  "ogre_win": {
+    "lines": [
+      ["Rimuru", "Gido... caiu. Devolver o que pilharam, e as estradas ficam sob proteção de Tempest."],
+      ["Ogros", "O slime venceu Gido!!Vamos seguir o mais forte!!"],
+      ["Grande Sábio", "Ameaça regional neutralizada. População +30, material +40, ouro +200."]
+    ],
+    "actions": [{"set": "gido_done", "val": true}, {"quest": "q_ogre", "state": "complete"}, {"resource": {"population": 30, "material": 40}}, {"gold": 200}, {"goto": "ending_messenger"}]
+  },
+  "ogre_peace": {
+    "lines": [
+      ["Rimuru", "Atrás de mim uivam lobos da floresta. E atrás deles, um dragão. O dízimo fica para o outro reino."],
+      ["Ogro Arauto", "L-lobo... dragão... Gido não disse nada sobre dragões! N-nos retiramos!"],
+      ["Grande Sábio", "Conflito evitado por diplomacia. População +10, ouro +100."]
+    ],
+    "actions": [{"set": "gido_done", "val": true}, {"quest": "q_ogre", "state": "complete"}, {"resource": {"population": 10}}, {"gold": 100}, {"goto": "ending_messenger"}]
+  },
+  "ogre_power": {
+    "lines": [
+      ["Rimuru", "Vê esta presa? Era do Rei Lobo Borboleta. Gido é o próximo, se quiser."],
+      ["Ogro Arauto", "A presa do rei lobo... Gido vai ouvir falar de você. Hoje não brigamos."],
+      ["Grande Sábio", "Demonstração de poder bem-sucedida. Ouro +150."]
+    ],
+    "actions": [{"set": "gido_done", "val": true}, {"quest": "q_ogre", "state": "complete"}, {"gold": 150}, {"goto": "ending_messenger"}]
+  },
+  "ending_messenger": {
+    "lines": [
+      ["Grande Sábio", "Tempest agora é uma vila. População, ofícios e alianças florescem."],
+      ["Mensageiro", "Senhor Rimuru! Um mensageiro do Reino Dwargon... e algo mais: dizem que um Lorde Demônio despertou no oeste."],
+      ["Rimuru", "Que venham. Temos Tempest. E temos um plano."],
+      ["", "FIM DA DEMONSTRAÇÃO — Capítulos futuros: a diplomacia com dwargons, a Academia, e o despertar do Lorde Demônio."],
+      ["", "Sistemas apresentados: Predador · Grande Sábio · Nação de Tempest · Diplomacia · Síntese"]
+    ],
+    "actions": [{"set": "demo_done", "val": true}, {"ending": "demo"}]
+  },
+  "shop_keeper": {
+    "lines": [["Serei", "Mercadoria fresca! Use as opções da loja."]],
+    "shop": true
+  }
+}

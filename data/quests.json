@@ -1,0 +1,10 @@
+{
+  "q_intro": {"name": "Recomeçar como Slime", "desc": "Explore a caverna, encontre o que quer que viva nela e saia para a floresta.", "chapter": 0},
+  "q_goblins": {"name": "Goblins em Perigo", "desc": "O Rei Lobo Borboleta massacrou a tribo goblin. Proteja os sobreviventes e dê-lhes um lar.", "chapter": 1},
+  "q_wolves": {"name": "A Floresta dos Lobos", "desc": "Os lobos consideram a floresta território deles. Resolva a questão: combate, negociação ou demonstração de poder.", "chapter": 1},
+  "q_boss_lobo": {"name": "O Rei Lobo Borboleta", "desc": "Derrote o chefão da floresta, no norte, para que Tempest tenha um futuro seguro.", "chapter": 1},
+  "q_founding": {"name": "Fundação de Tempest", "desc": "Após a vitória, firme o assentamento no vale. Recrute, construa, prospere.", "chapter": 2},
+  "q_craftsmen": {"name": "Artesãos Necessários", "desc": "Uma nação precisa de ferreiros e cozinheiros. Viaje à Vila Jura e recrute profissionais.", "chapter": 2},
+  "q_lab": {"name": "Laboratório de Pesquisa", "desc": "Entregue 3 Líquidos Mágicos para liberar a Síntese de habilidades com o Grande Sábio.", "chapter": 2},
+  "q_ogre": {"name": "Ameaça Regional", "desc": "O Rei Ogro Gido uniu os ogros e pilha as estradas. Enfrente-o (ou negocie, se tiver aliados).", "chapter": 2}
+}
