@@ -9,6 +9,7 @@ const TILES := {
 	"dirt":   {"atlas": [5, 2],  "solid": false},
 	"dirt2":  {"atlas": [6, 2],  "solid": false},
 	"tree":   {"atlas": [16, 10], "solid": true},
+	"treetop": {"atlas": [16, 9], "solid": false},
 	"bush":   {"atlas": [13, 2], "solid": false},
 	"rock":   {"atlas": [12, 0], "solid": true},
 	"cavefloor": {"atlas": [14, 12], "solid": false},
@@ -16,13 +17,12 @@ const TILES := {
 	"wall":   {"atlas": [34, 12], "solid": true},
 	"roof":   {"atlas": [34, 21], "solid": true},
 	"door":   {"atlas": [20, 21], "solid": false},
-	"wood":   {"atlas": [6, 2],  "solid": false},
 }
 
 const CHARS := {
 	".": "grass", ",": "grass2", "~": "water", "%": "water2", "-": "dirt", "=": "dirt2",
 	"T": "tree", "b": "bush", "r": "rock", "f": "cavefloor", "#": "cavewall",
-	"W": "wall", "R": "roof", "D": "door", "u": "wood",
+	"W": "wall", "R": "roof", "D": "door",
 }
 
 static func get_map(id: String) -> Dictionary:
@@ -39,13 +39,13 @@ static func _blank(w: int, h: int, ch: String) -> Array:
 		rows.append(String(ch).repeat(w))
 	return rows
 
-static func _set(rows: Array, x: int, y: int, ch: String) -> void:
+static func _setch(rows: Array, x: int, y: int, ch: String) -> void:
 	rows[y] = rows[y].substr(0, x) + ch + rows[y].substr(x + 1)
 
 static func _rect(rows: Array, x0: int, y0: int, x1: int, y1: int, ch: String) -> void:
 	for y in range(y0, y1 + 1):
 		for x in range(x0, x1 + 1):
-			_set(rows, x, y, ch)
+			_setch(rows, x, y, ch)
 
 static func _cave() -> Dictionary:
 	var w := 20
@@ -55,8 +55,8 @@ static func _cave() -> Dictionary:
 	_rect(rows, 3, 3, 5, 4, "#")
 	_rect(rows, 14, 2, 16, 4, "#")
 	_rect(rows, 6, 9, 8, 10, "#")
-	_set(rows, 9, 13, "f")
-	_set(rows, 10, 13, "f")
+	_setch(rows, 9, 13, "f")
+	_setch(rows, 10, 13, "f")
 	return {
 		"layout": rows,
 		"encounter": "cave",
@@ -78,22 +78,22 @@ static func _forest() -> Dictionary:
 	# bordas de árvore
 	for x in w:
 		for t in 2:
-			_set(rows, x, t, "T")
-			_set(rows, x, h - 1 - t, "T")
+			_setch(rows, x, t, "T")
+			_setch(rows, x, h - 1 - t, "T")
 	for y in h:
 		for t in 2:
-			_set(rows, t, y, "T")
-			_set(rows, w - 1 - t, y, "T")
+			_setch(rows, t, y, "T")
+			_setch(rows, w - 1 - t, y, "T")
 	# árvores internas com ruído determinístico
 	for y in range(3, h - 2):
 		for x in range(3, w - 2):
 			var v := rng.randf()
 			if v < 0.14:
-				_set(rows, x, y, "T")
+				_setch(rows, x, y, "T")
 			elif v < 0.18:
-				_set(rows, x, y, "b")
+				_setch(rows, x, y, "b")
 			elif v < 0.195:
-				_set(rows, x, y, "r")
+				_setch(rows, x, y, "r")
 	# clareiras
 	_rect(rows, 18, 3, 26, 8, ".")     # area do chefe
 	_rect(rows, 19, 10, 24, 14, ".")   # clareira central
@@ -107,7 +107,7 @@ static func _forest() -> Dictionary:
 	_rect(rows, 8, 6, 13, 9, "~")
 	_rect(rows, 34, 24, 38, 27, "~")
 	for i in 8:
-		_set(rows, 32 + rng.randi() % 9, 22 + rng.randi() % 8, "%")
+		_setch(rows, 32 + rng.randi() % 9, 22 + rng.randi() % 8, "%")
 	# entradas/portais abertos
 	_rect(rows, 20, 32, 22, 33, "-")   # saida sul -> caverna
 	_rect(rows, 1, 28, 3, 30, "-")     # portal oeste -> vila
@@ -136,21 +136,21 @@ static func _village() -> Dictionary:
 	var rows := _blank(w, h, ".")
 	for x in w:
 		for t in 1:
-			_set(rows, x, t, "T")
-			_set(rows, x, h - 1 - t, "T")
+			_setch(rows, x, t, "T")
+			_setch(rows, x, h - 1 - t, "T")
 	for y in h:
-		_set(rows, 0, y, "T")
-		_set(rows, w - 1, y, "T")
+		_setch(rows, 0, y, "T")
+		_setch(rows, w - 1, y, "T")
 	# praça central e ruas
 	_rect(rows, 8, 8, 21, 13, "=")
 	_rect(rows, 14, 2, 15, 21, "-")
 	# casas
-	_rect(rows, 4, 4, 8, 7, "W"); _rect(rows, 4, 4, 8, 4, "R"); _set(rows, 6, 7, "D")
-	_rect(rows, 21, 4, 25, 7, "W"); _rect(rows, 21, 4, 25, 4, "R"); _set(rows, 23, 7, "D")
-	_rect(rows, 5, 15, 10, 18, "W"); _rect(rows, 5, 15, 10, 15, "R"); _set(rows, 7, 18, "D")
-	_rect(rows, 18, 15, 24, 19, "W"); _rect(rows, 18, 15, 24, 15, "R"); _set(rows, 21, 19, "D")
+	_rect(rows, 4, 4, 8, 7, "W"); _rect(rows, 4, 4, 8, 4, "R"); _setch(rows, 6, 7, "D")
+	_rect(rows, 21, 4, 25, 7, "W"); _rect(rows, 21, 4, 25, 4, "R"); _setch(rows, 23, 7, "D")
+	_rect(rows, 5, 15, 10, 18, "W"); _rect(rows, 5, 15, 10, 15, "R"); _setch(rows, 7, 18, "D")
+	_rect(rows, 18, 15, 24, 19, "W"); _rect(rows, 18, 15, 24, 15, "R"); _setch(rows, 21, 19, "D")
 	# guilda maior
-	_rect(rows, 12, 3, 17, 6, "W"); _rect(rows, 12, 3, 17, 3, "R"); _set(rows, 14, 6, "D")
+	_rect(rows, 12, 3, 17, 6, "W"); _rect(rows, 12, 3, 17, 3, "R"); _setch(rows, 14, 6, "D")
 	return {
 		"layout": rows,
 		"encounter": "",
@@ -171,11 +171,11 @@ static func _tempest() -> Dictionary:
 	var h := 20
 	var rows := _blank(w, h, ".")
 	for x in w:
-		_set(rows, x, 0, "T")
-		_set(rows, x, h - 1, "T")
+		_setch(rows, x, 0, "T")
+		_setch(rows, x, h - 1, "T")
 	for y in h:
-		_set(rows, 0, y, "T")
-		_set(rows, w - 1, y, "T")
+		_setch(rows, 0, y, "T")
+		_setch(rows, w - 1, y, "T")
 	for i in range(1, w - 1):
 		if rows[1][i] != "T":
 			pass
@@ -183,7 +183,7 @@ static func _tempest() -> Dictionary:
 	_rect(rows, 11, 8, 16, 12, "=")
 	_rect(rows, 13, 13, 14, 19, "-")
 	# casa principal (sempre presente apos fundacao)
-	_rect(rows, 11, 4, 16, 7, "W"); _rect(rows, 11, 4, 16, 4, "R"); _set(rows, 13, 7, "D")
+	_rect(rows, 11, 4, 16, 7, "W"); _rect(rows, 11, 4, 16, 4, "R"); _setch(rows, 13, 7, "D")
 	return {
 		"layout": rows,
 		"encounter": "",

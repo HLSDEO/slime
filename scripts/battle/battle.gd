@@ -8,6 +8,7 @@ var queue: Array = []
 var kind := "encounter"
 var battle_context := {}
 var over := false
+var _fled := false
 
 var log_label: Label
 var menu_box: VBoxContainer
@@ -119,7 +120,7 @@ func _build_ui() -> void:
 		var hb := _bar(140)
 		v.add_child(hb)
 		var mb := _bar(140)
-		mb.tint_progress = Color(0.35, 0.5, 0.95)
+		mb.self_modulate = Color(0.45, 0.6, 1.0)
 		v.add_child(mb)
 		add_child(panel)
 		party_nodes[u] = {"bar": hb, "mbar": mb, "spr": spr, "panel": panel}
@@ -290,7 +291,8 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			_show_targets(u, action, alive_foes, "Atacar quem?")
 			var t1: Dictionary = await acted
 			if t1.kind == "cancel":
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			await _act_attack(u, t1.target, 40)
 		"skills":
 			var usable := []
@@ -301,7 +303,8 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			if usable.is_empty():
 				_log("Sem habilidades utilizáveis (PM insuficiente).")
 				await get_tree().create_timer(0.6).timeout
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			_clear_menu()
 			for s in usable:
 				var b := Button.new()
@@ -316,14 +319,16 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			menu_box.add_child(cb)
 			var sel: Dictionary = await acted
 			if sel.kind == "cancel":
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			await _cast_skill(u, sel.skill)
 		"analyze":
 			var alive_foes2 := foes.filter(func(f): return f.alive)
 			_show_targets(u, action, alive_foes2, "Analisar quem?")
 			var t2: Dictionary = await acted
 			if t2.kind == "cancel":
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			_act_analyze(u, t2.target)
 		"defend":
 			u.defending = true
@@ -337,7 +342,8 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			if owned.is_empty():
 				_log("Mochila vazia.")
 				await get_tree().create_timer(0.5).timeout
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			_clear_menu()
 			for k in owned:
 				var b3 := Button.new()
@@ -352,7 +358,8 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			menu_box.add_child(cb2)
 			var it: Dictionary = await acted
 			if it.kind == "cancel":
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			await _use_item(u, it.item)
 		"absorb":
 			_clear_menu()
@@ -374,7 +381,8 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			menu_box.add_child(cb3)
 			var ab: Dictionary = await acted
 			if ab.kind == "cancel":
-				return await _player_turn(u)
+				await _player_turn(u)
+			return
 			await _act_absorb(ab.target)
 		"flee":
 			var avg_pa := _avg_agi(party)
@@ -383,7 +391,7 @@ func _do_action(u: BattleUnit, action: Dictionary) -> void:
 			if randf() < chance:
 				_log("Fuga bem-sucedida!")
 				over = true
-				Flow.finish_battle("flee")
+				_fled = true
 				return
 			_log("Não conseguiu fugir!")
 			await get_tree().create_timer(0.6).timeout
@@ -562,7 +570,7 @@ func _use_item(u: BattleUnit, item_id: String) -> void:
 		if kind == "encounter":
 			_log("Bomba de fumaça! Fuga garantida!")
 			over = true
-			Flow.finish_battle("flee")
+			_fled = true
 			return
 		_log("Inútil aqui...")
 		return
@@ -621,8 +629,11 @@ func _kill(u: BattleUnit, _attacker) -> void:
 
 func _finish() -> void:
 	_clear_menu()
+	if _fled:
+		Flow.finish_battle("flee")
+		await Flow.return_to_world()
+		return
 	var rim: BattleUnit = party[0]
-	GameState.p.hp = maxi(1, 0) if false else GameState.p.hp
 	if not party.any(func(u): return u.alive):
 		_log("Você foi derrotado... mas uma força antiga te envolve em sombras. Veldora te salva de novo.")
 		GameState.p.hp = int(GameState.p.max_hp * 0.5)

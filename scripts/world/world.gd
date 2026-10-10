@@ -67,15 +67,18 @@ func _build_tileset() -> void:
 	src.texture = load("res://assets/kenney_rpg/Spritesheet/roguelikeSheet_transparent.png")
 	src.texture_region_size = Vector2i(16, 16)
 	src.use_texture_padding = false
+	ts.add_source(src, 0)
 	for key in MapDef.TILES:
 		var def: Dictionary = MapDef.TILES[key]
 		var atlas: Array = def.atlas
 		var coord := Vector2i(atlas[0], atlas[1])
-		src.create_tile(coord)
+		if not src.has_tile(coord):
+			src.create_tile(coord)
 		if def.get("solid", false):
 			var poly := PackedVector2Array([Vector2(0, 0), Vector2(16, 0), Vector2(16, 16), Vector2(0, 16)])
-			src.tile_add_collision_polygon(coord, 0, poly)
-	ts.add_source(src, 0)
+			var td := src.get_tile_data(coord, 0)
+			td.add_collision_polygon(0)
+			td.set_collision_polygon_points(0, 0, poly)
 	_shared_tileset = ts
 
 func _tile_coords(atlas: Array) -> Vector2i:
@@ -108,8 +111,8 @@ func _build_layers() -> void:
 func _spawn_player() -> void:
 	player = SlimePlayer.new()
 	player.setup("res://assets/generated/rimuru.png")
-	var px := GameState.pos.get("x", 10)
-	var py := GameState.pos.get("y", 9)
+	var px := int(GameState.pos.get("x", 10))
+	var py := int(GameState.pos.get("y", 9))
 	player.position = Vector2(px * TILE + TILE / 2.0, py * TILE + TILE / 2.0)
 	var cam := Camera2D.new()
 	var rows: Array = mapdef.layout
@@ -132,7 +135,7 @@ func _build_portals() -> void:
 		cs.shape = shape
 		area.add_child(cs)
 		area.position = Vector2(p.x * TILE + w_tiles * TILE / 2.0, p.y * TILE + TILE / 2.0)
-		var meta := p.duplicate()
+		var meta: Dictionary = p.duplicate()
 		area.set_meta("portal", meta)
 		area.body_entered.connect(_on_portal.bind(meta))
 		add_child(area)
@@ -149,6 +152,8 @@ func _portal_ok(p: Dictionary) -> bool:
 	return true
 
 func _on_portal(body: Node, meta: Dictionary) -> void:
+	if body != player:
+		return
 	if busy:
 		return
 	if not _portal_ok(meta):
@@ -216,8 +221,10 @@ func _build_hud() -> void:
 	toast_label = Label.new()
 	toast_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	toast_label.position = Vector2(0, 6)
-	toast_label.size = Vector2(640, 40)
+	toast_label.offset_left = 0
+	toast_label.offset_right = 0
+	toast_label.offset_top = 6
+	toast_label.offset_bottom = 46
 	toast_label.add_theme_font_size_override("font_size", 12)
 	toast_label.add_theme_color_override("font_color", Color(0.85, 0.95, 1))
 	toast_label.modulate.a = 0.0
@@ -236,7 +243,10 @@ func _build_hud() -> void:
 	hud.add_child(tracker)
 	var gold_lbl := Label.new()
 	gold_lbl.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	gold_lbl.position = Vector2(-120, 6)
+	gold_lbl.offset_left = -120
+	gold_lbl.offset_right = -6
+	gold_lbl.offset_top = 6
+	gold_lbl.offset_bottom = 24
 	gold_lbl.add_theme_font_size_override("font_size", 12)
 	gold_lbl.add_theme_color_override("font_color", Color(1, 0.9, 0.5))
 	gold_lbl.text = "Ouro: %d" % GameState.gold
@@ -249,7 +259,7 @@ func _toast(text: String) -> void:
 
 func _check_story() -> void:
 	if Flow.last_result == "win" and Flow.resume_dialogue != "":
-		var node_id := Flow.resume_dialogue
+		var node_id: String = Flow.resume_dialogue
 		Flow.resume_dialogue = ""
 		Flow.last_result = ""
 		_open_dialogue(node_id)
@@ -307,8 +317,8 @@ func _physics_process(delta: float) -> void:
 
 func _current_pool() -> String:
 	for z in mapdef.zones:
-		var px := GameState.pos.x
-		var py := GameState.pos.y
+		var px := int(GameState.pos.x)
+		var py := int(GameState.pos.y)
 		if px >= z.x and px < z.x + z.w and py >= z.y and py < z.y + z.h:
 			return z.pool
 	var pool: String = mapdef.encounter

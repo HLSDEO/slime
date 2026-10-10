@@ -145,7 +145,13 @@ func _exec(actions: Array) -> bool:  # true = houve takeover (batalha/mapa/fim)
 			GameState.gold += int(a["gold"])
 			request_toast.emit("[Ouro] " + ("+" if a["gold"] > 0 else "") + str(a["gold"]))
 		elif a.has("quest"):
-			GameState.set_quest(a["quest"], a["state"] if a["state"] != "check" else "active")
+			var st: String = a["state"]
+			match st:
+				"start", "check":
+					st = "active"
+				"complete":
+					st = "done"
+			GameState.set_quest(a["quest"], st)
 			var qname: String = Data.quests[a["quest"]]["name"]
 			if a["state"] == "start":
 				request_toast.emit("[Missão] " + qname)
@@ -188,7 +194,7 @@ func _next_line() -> void:
 	full_text = pair[1]
 	typed_chars = 0
 	typing = true
-	var p := PORTRAITS.get(speaker, ["", Color.WHITE])
+	var p: Array = PORTRAITS.get(speaker, ["", Color.WHITE])
 	if p[0] == "":
 		portrait.visible = false
 	else:
@@ -211,7 +217,7 @@ func _finish_node() -> void:
 		if took or _pending_battle.size() > 0:
 			_takeover()
 			return
-	var goto := node.get("goto", "")
+	var goto: String = node.get("goto", "")
 	if goto != "":
 		start(goto)
 		return

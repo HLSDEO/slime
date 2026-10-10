@@ -82,7 +82,7 @@ func _show_tab(tab: String) -> void:
 
 func _tab_equipe() -> void:
 	content.add_child(_label("— EQUIPE —", 15, Color(0.5, 0.9, 1)))
-	var p := GameState.p
+	var p: Dictionary = GameState.p
 	content.add_child(_label("Rimuru (Nv %d)  PV %d/%d  PM %d/%d" % [p.level, p.hp, p.max_hp, p.mp, p.max_mp], 14, Color(0.6, 1, 0.8)))
 	content.add_child(_label("FOR %d  MAG %d  DEF %d  RES %d  AGI %d  PER %d  XP %d/%d" % [p.atk, p.mag, p.def, p.res, p.agi, p.per, p.xp, GameState.xp_needed()]))
 	for a in GameState.allies:
@@ -102,7 +102,7 @@ func _tab_skills() -> void:
 	content.add_child(_label("— BIBLIOTECA DE HABILIDADES —", 15, Color(0.5, 0.9, 1)))
 	for id in GameState.skills:
 		var s: Dictionary = Data.skills[id]
-		var tag := {"active": "Ativa", "passive": "Passiva", "unique": "Única"}.get(s.type, s.type)
+		var tag: String = {"active": "Ativa", "passive": "Passiva", "unique": "Única"}.get(s.type, "?")
 		var extra := ""
 		if s.type == "active":
 			extra = "  [%s, poder %s, %s PM]" % [s.element, str(s.power), str(s.cost)]

@@ -18,13 +18,8 @@ func _ready() -> void:
 	layer.layer = 100
 	layer.add_child(_fade_rect)
 	add_child(layer)
-	_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var root := get_tree().root
-	root.size_changed.connect(func():
-		_fade_rect.size = root.get_visible_rect().size)
-	_fade_rect.size = Vector2(1280, 720)
 	_fade_rect.position = Vector2.ZERO
-	_fade_rect.anchors_preset = Control.PRESET_FULL_RECT
+	_fade_rect.size = Vector2(1280, 720)
 
 func goto_map(map_id: String, tile_x: int, tile_y: int, autosave := true) -> void:
 	GameState.map_id = map_id
@@ -64,5 +59,5 @@ func to_menu() -> void:
 
 func _fade(in_dir: bool) -> void:
 	var tw := create_tween()
-	tw.tween_property(_fade_rect.modulate, "a", 1.0 if in_dir else 0.0, 0.25)
+	tw.tween_property(_fade_rect, "modulate:a", 1.0 if in_dir else 0.0, 0.25)
 	await tw.finished
